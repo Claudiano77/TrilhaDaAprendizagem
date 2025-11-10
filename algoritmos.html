@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algoritmos - Trilha Da Aprendizagem</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div id="app" class="gradient-bg min-h-screen"></div>
+
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    function AlgorithmModule() {
+      const [stage, setStage] = useState('intro');
+      const [userSequence, setUserSequence] = useState([]);
+      const [draggedItem, setDraggedItem] = useState(null);
+
+      const correctSequence = [
+        '1. Pegar o pó de café',
+        '2. Colocar água na máquina',
+        '3. Colocar o pó no filtro',
+        '4. Ligar a máquina',
+        '5. Servir o café na xícara'
+      ];
+
+      const [availableSteps, setAvailableSteps] = useState(
+        [...correctSequence].sort(() => Math.random() - 0.5)
+      );
+
+      const handleDragStart = (step) => {
+        setDraggedItem(step);
+      };
+
+      const handleDragOver = (e) => {
+        e.preventDefault();
+      };
+
+      const handleDrop = (e) => {
+        e.preventDefault();
+        if (draggedItem && !userSequence.includes(draggedItem)) {
+          setUserSequence([...userSequence, draggedItem]);
+          setDraggedItem(null);
+        }
+      };
+
+      const removeStep = (index) => {
+        setUserSequence(userSequence.filter((_, i) => i !== index));
+      };
+
+      const checkAnswer = () => {
+        const isCorrect = JSON.stringify(userSequence) === JSON.stringify(correctSequence);
+        if (isCorrect) {
+          setStage('success');
+          // Salvar progresso
+          const completed = JSON.parse(localStorage.getItem('completed-modules') || '[]');
+          if (!completed.includes('algorithms')) {
+            completed.push('algorithms');
+            localStorage.setItem('completed-modules', JSON.stringify(completed));
+          }
+        } else {
+          alert('❌ Ops! A sequência não está correta. Tente novamente!');
+        }
+      };
+
+      const resetChallenge = () => {
+        setUserSequence([]);
+        setAvailableSteps([...correctSequence].sort(() => Math.random() - 0.5));
+      };
+
+      if (stage === 'intro') {
+        return (
+          <div className="min-h-screen p-6 flex items-center justify-center">
+            <div className="max-w-3xl card-glass rounded-3xl p-8">
+              <button
+                onClick={() => window.location.href = 'menu.html'}
+                className="mb-6 text-purple-200 hover:text-white flex items-center gap-2"
+              >
+                ← Voltar ao Mapa
+              </button>
+
+              <div className="text-center mb-8">
+                <div className="text-6xl mb-4">🎯</div>
+                <h2 className="text-4xl font-bold text-white mb-4">
+                  Algoritmos: Os Passos do Herói
+                </h2>
+              </div>
+
+              <div className="text-purple-100 space-y-4 mb-8">
+                <p className="text-lg">
+                  <strong className="text-cyan-400">O que é um algoritmo?</strong>
+                </p>
+                <p>
+                  Um algoritmo é como uma receita de bolo! 🎂 É uma sequência de passos
+                  organizados que você segue para resolver um problema ou completar uma tarefa.
+                </p>
+                <p>
+                  Pense em escovar os dentes. Você não faz de qualquer jeito, certo?
+                  Você segue uma ordem:
+                </p>
+                <div className="bg-white/10 rounded-lg p-4 ml-4">
+                  <p>1️⃣ Pegar a escova de dentes</p>
+                  <p>2️⃣ Colocar pasta de dente</p>
+                  <p>3️⃣ Molhar a escova</p>
+                  <p>4️⃣ Escovar os dentes</p>
+                  <p>5️⃣ Enxaguar a boca</p>
+                </div>
+                <p>
+                  Se você trocar a ordem (tipo, enxaguar antes de escovar), não funciona bem, né?
+                  É isso que faz um algoritmo especial: <strong className="text-yellow-400">a ordem importa!</strong>
+                </p>
+                <p className="text-cyan-300">
+                  <strong>Na programação:</strong> Usamos algoritmos o tempo todo!
+                  Quando você joga um jogo no celular, cada ação que acontece
+                  (pular, correr, marcar pontos) segue um algoritmo que o programador criou.
+                </p>
+                <p>
+                  <strong className="text-yellow-400">🎯 Sua Missão:</strong> Organize os passos
+                  para fazer café na ordem correta!
+                </p>
+              </div>
+
+              <button
+                onClick={() => setStage('challenge')}
+                className="btn-primary text-white w-full py-4 text-lg rounded-xl font-bold"
+              >
+                Aceitar Desafio 🚀
+              </button>
+            </div>
+          </div>
+        );
+      }
+
+      if (stage === 'challenge') {
+        return (
+          <div className="min-h-screen p-6">
+            <div className="max-w-5xl mx-auto">
+              <button
+                onClick={() => window.location.href = 'menu.html'}
+                className="mb-6 text-purple-200 hover:text-white flex items-center gap-2"
+              >
+                ← Voltar ao Mapa
+              </button>
+
+              <div className="text-center mb-8">
+                <div className="text-5xl mb-3">☕</div>
+                <h2 className="text-3xl font-bold text-white mb-2">
+                  Como Fazer Café?
+                </h2>
+                <p className="text-purple-200">
+                  Arraste os passos para a área abaixo na ordem correta
+                </p>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                {/* Passos disponíveis */}
+                <div className="card-glass rounded-2xl p-6">
+                  <h3 className="text-xl font-bold text-cyan-400 mb-4 flex items-center gap-2">
+                    <span>📋</span> Passos Disponíveis
+                  </h3>
+                  <div className="space-y-3">
+                    {availableSteps.map((step, index) => (
+                      !userSequence.includes(step) && (
+                        <div
+                          key={index}
+                          draggable
+                          onDragStart={() => handleDragStart(step)}
+                          className="drag-item bg-white/20 rounded-lg p-4 text-white font-semibold hover:bg-white/30"
+                        >
+                          {step}
+                        </div>
+                      )
+                    ))}
+                  </div>
+                </div>
+
+                {/* Zona de drop */}
+                <div className="card-glass rounded-2xl p-6">
+                  <h3 className="text-xl font-bold text-pink-400 mb-4 flex items-center gap-2">
+                    <span>✨</span> Sua Sequência
+                  </h3>
+                  <div
+                    onDrop={handleDrop}
+                    onDragOver={handleDragOver}
+                    className="drop-zone min-h-[400px] rounded-lg p-4 space-y-3"
+                  >
+                    {userSequence.length === 0 ? (
+                      <div className="text-purple-300 text-center mt-12 text-lg">
+                        👆 Arraste os passos aqui
+                      </div>
+                    ) : (
+                      userSequence.map((step, index) => (
+                        <div
+                          key={index}
+                          className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg p-4 text-white font-semibold flex justify-between items-center fade-in"
+                        >
+                          <span>{step}</span>
+                          <button
+                            onClick={() => removeStep(index)}
+                            className="text-white hover:text-red-300 text-2xl"
+                          >
+                            ❌
+                          </button>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-8 flex gap-4 justify-center flex-wrap">
+                <button
+                  onClick={resetChallenge}
+                  className="bg-gray-600 hover:bg-gray-700 text-white px-8 py-4 rounded-xl font-semibold transition-all"
+                >
+                  🔄 Resetar
+                </button>
+                <button
+                  onClick={checkAnswer}
+                  disabled={userSequence.length !== correctSequence.length}
+                  className="btn-primary text-white px-8 py-4 rounded-xl font-semibold"
+                >
+                  ✅ Verificar Resposta
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      if (stage === 'success') {
+        return (
+          <div className="min-h-screen p-6 flex items-center justify-center">
+            <div className="max-w-2xl card-glass rounded-3xl p-8 text-center">
+              <div className="text-8xl mb-6 animate-bounce">🎉</div>
+              <h2 className="text-4xl font-bold text-white mb-4">
+                Missão Concluída!
+              </h2>
+              <p className="text-xl text-purple-200 mb-8">
+                Parabéns! Você entendeu que algoritmos são sequências ordenadas de passos.
+                Essa é a base de toda a programação! 🚀
+              </p>
+
+              <div className="bg-white/10 rounded-lg p-6 mb-8 text-left">
+                <h3 className="text-2xl font-bold text-cyan-400 mb-4 text-center">
+                  📚 O que você aprendeu:
+                </h3>
+                <ul className="text-purple-100 space-y-3 text-lg">
+                  <li className="flex items-start gap-3">
+                    <span className="text-green-400 text-2xl">✓</span>
+                    <span>Algoritmos são sequências de passos para resolver um problema</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-green-400 text-2xl">✓</span>
+                    <span>A ordem dos passos é muito importante</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-green-400 text-2xl">✓</span>
+                    <span>Cada passo deve ser claro e específico</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-green-400 text-2xl">✓</span>
+                    <span>Programadores usam algoritmos todos os dias!</span>
+                  </li>
+                </ul>
+              </div>
+
+              <button
+                onClick={() => window.location.href = 'menu.html'}
+                className="btn-primary text-white text-lg px-8 py-4 rounded-xl font-bold"
+              >
+                Voltar ao Mapa 🗺️
+              </button>
+            </div>
+          </div>
+        );
+      }
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('app'));
+    root.render(<AlgorithmModule />);
+  </script>
+</body>
+
+</html>

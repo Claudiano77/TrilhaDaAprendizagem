@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estruturas de Controle - Trilha Da Aprendizagem</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div id="app" class="gradient-bg min-h-screen p-6"></div>
+
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    function ControlModule() {
+      const [stage, setStage] = useState('intro');
+      const [answer, setAnswer] = useState('');
+
+      const checkAnswer = () => {
+        if (answer === 'Chovendo', 'chovendo') {
+          setStage('success');
+          const completed = JSON.parse(localStorage.getItem('completed-modules') || '[]');
+          if (!completed.includes('control')) {
+            completed.push('control');
+            localStorage.setItem('completed-modules', JSON.stringify(completed));
+          }
+        } else {
+          alert('❌ Tente novamente! Pense no que acontece SE estiver chovendo.');
+        }
+      };
+
+      if (stage === 'intro') {
+        return (
+          <div className="max-w-3xl mx-auto card-glass rounded-3xl p-8 mt-12">
+            <button onClick={() => window.location.href = 'menu.html'} className="mb-6 text-purple-200 hover:text-white">← Voltar</button>
+            <div className="text-center mb-8">
+              <div className="text-6xl mb-4">🔀</div>
+              <h2 className="text-4xl font-bold text-white mb-4">Estruturas de Controle: A Encruzilhada</h2>
+            </div>
+            <div className="text-purple-100 space-y-4 mb-8">
+              <p className="text-lg"><strong className="text-cyan-400">O que são estruturas de controle?</strong></p>
+              <p>Imagine que você está indo para a escola. Mas aí você olha pela janela... 🌧️</p>
+              <p><strong>SE</strong> estiver chovendo → Você pega o guarda-chuva ☂️<br />
+                <strong>SENÃO</strong> → Você sai sem o guarda-chuva ☀️</p>
+              <p>Isso é uma <strong className="text-yellow-400">estrutura de controle</strong>! O programa toma decisões baseadas em condições.</p>
+              <div className="code-block">
+                SE (está chovendo) {'{'}
+                <br />&nbsp;&nbsp;pegar guarda-chuva
+                <br />{'}'} SENÃO {'{'}
+                <br />&nbsp;&nbsp;sair sem guarda-chuva
+                <br />{'}'}
+              </div>
+            </div>
+            <button onClick={() => setStage('challenge')} className="btn-primary text-white w-full py-4 text-lg rounded-xl font-bold">
+              Aceitar Desafio 🚀
+            </button>
+          </div>
+        );
+      }
+
+      if (stage === 'challenge') {
+        return (
+          <div className="max-w-4xl mx-auto card-glass rounded-3xl p-8 mt-12">
+            <button onClick={() => window.location.href = 'menu.html'} className="mb-6 text-purple-200 hover:text-white">← Voltar</button>
+            <div className="text-center mb-8">
+              <div className="text-5xl mb-3">🤔</div>
+              <h2 className="text-3xl font-bold text-white mb-2">Complete a Condição</h2>
+            </div>
+            <div className="bg-white/10 rounded-xl p-6 mb-6">
+              <p className="text-purple-200 mb-4 text-lg">Código:</p>
+              <div className="code-block text-lg">
+                SE (está <input
+                  type="text"
+                  value={answer}
+                  onChange={(e) => setAnswer(e.target.value)}
+                  className="bg-yellow-400 text-black px-3 py-1 rounded mx-2 w-32"
+                  placeholder="____"
+                />) {'{'}
+                <br />&nbsp;&nbsp;levar guarda-chuva = true
+                <br />{'}'} SENÃO {'{'}
+                <br />&nbsp;&nbsp;levar guarda-chuva = false
+                <br />{'}'}
+              </div>
+              <p className="text-purple-300 mt-4">💡 Dica: Quando você leva guarda-chuva?</p>
+            </div>
+            <button onClick={checkAnswer} className="btn-primary text-white w-full py-4 rounded-xl font-semibold">
+              ✅ Verificar
+            </button>
+          </div>
+        );
+      }
+
+      return (
+        <div className="max-w-2xl mx-auto card-glass rounded-3xl p-8 mt-12 text-center">
+          <div className="text-8xl mb-6 animate-bounce">🎉</div>
+          <h2 className="text-4xl font-bold text-white mb-4">Missão Concluída!</h2>
+          <p className="text-xl text-purple-200 mb-8">Você dominou as estruturas de controle! 🔀</p>
+          <div className="bg-white/10 rounded-lg p-6 mb-8 text-left">
+            <h3 className="text-2xl font-bold text-cyan-400 mb-4 text-center">📚 Aprendizado:</h3>
+            <ul className="text-purple-100 space-y-3">
+              <li>✓ SE/SENÃO ajudam o programa a tomar decisões</li>
+              <li>✓ Condições são perguntas verdadeiras ou falsas</li>
+              <li>✓ O código executa diferentes ações baseado na resposta</li>
+            </ul>
+          </div>
+          <button onClick={() => window.location.href = 'menu.html'} className="btn-primary text-white px-8 py-4 rounded-xl font-bold">
+            Voltar ao Mapa 🗺️
+          </button>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('app')).render(<ControlModule />);
+  </script>
+</body>
+
+</html>

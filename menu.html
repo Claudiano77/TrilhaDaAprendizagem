@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mapa de Missões - Trilha Da Aprendizagem</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div id="app" class="gradient-bg min-h-screen"></div>
+
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    function ModuleMenu() {
+      const [completedModules, setCompletedModules] = useState(new Set());
+
+      useEffect(() => {
+        const saved = localStorage.getItem('completed-modules');
+        if (saved) {
+          setCompletedModules(new Set(JSON.parse(saved)));
+        }
+      }, []);
+
+      const modules = [
+        {
+          id: 'algorithms',
+          name: 'Algoritmos',
+          subtitle: 'Os Passos do Herói',
+          icon: '🎯',
+          color: 'from-blue-500 to-cyan-500',
+          file: 'algoritmos.html'
+        },
+        {
+          id: 'variables',
+          name: 'Variáveis',
+          subtitle: 'O Cofre de Dados',
+          icon: '📦',
+          color: 'from-purple-500 to-pink-500',
+          file: 'variaveis.html'
+        },
+        {
+          id: 'control',
+          name: 'Estruturas de Controle',
+          subtitle: 'A Encruzilhada',
+          icon: '🔀',
+          color: 'from-green-500 to-teal-500',
+          file: 'controle.html'
+        },
+        {
+          id: 'loops',
+          name: 'Estruturas de Repetição',
+          subtitle: 'A Tarefa Rápida',
+          icon: '🔄',
+          color: 'from-orange-500 to-red-500',
+          file: 'loops.html'
+        },
+        {
+          id: 'functions',
+          name: 'Funções',
+          subtitle: 'O Feitiço Mágico',
+          icon: '✨',
+          color: 'from-indigo-500 to-purple-500',
+          file: 'funcoes.html'
+        },
+        {
+          id: 'recursion',
+          name: 'Recursão',
+          subtitle: 'O Espelho Infinito',
+          icon: '🪞',
+          color: 'from-pink-500 to-rose-500',
+          file: 'recursao.html'
+        },
+      ];
+
+      const isUnlocked = (index) => {
+        if (index === 0) return true;
+        return completedModules.has(modules[index - 1].id);
+      };
+
+      const handleModuleClick = (module, index) => {
+        if (isUnlocked(index)) {
+          window.location.href = module.file;
+        }
+      };
+
+      const totalCompleted = completedModules.size;
+      const progressPercentage = (totalCompleted / modules.length) * 100;
+
+      return (
+        <div className="min-h-screen p-6">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-8">
+              <h1 className="text-5xl font-bold text-white mb-4">🚀 Mapa de Missões</h1>
+              <p className="text-xl text-purple-200 mb-6">Escolha sua próxima aventura espacial</p>
+
+              {/* Barra de Progresso */}
+              <div className="max-w-md mx-auto">
+                <div className="flex justify-between text-sm text-purple-200 mb-2">
+                  <span>Progresso Total</span>
+                  <span>{totalCompleted} / {modules.length} Completos</span>
+                </div>
+                <div className="w-full bg-white/20 rounded-full h-4 overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-cyan-500 to-purple-600 transition-all duration-500"
+                    style={{ width: `${progressPercentage}%` }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {modules.map((module, index) => {
+                const unlocked = isUnlocked(index);
+                const completed = completedModules.has(module.id);
+
+                return (
+                  <div
+                    key={module.id}
+                    onClick={() => handleModuleClick(module, index)}
+                    className={`module-card card-glass rounded-2xl p-6 ${!unlocked ? 'module-locked' : ''}`}
+                  >
+                    <div className="text-center">
+                      <div className="text-6xl mb-4">
+                        {unlocked ? module.icon : '🔒'}
+                      </div>
+
+                      {completed && (
+                        <div className="flex justify-center mb-3">
+                          <div className="bg-green-500 text-white rounded-full p-2 w-10 h-10 flex items-center justify-center">
+                            ✓
+                          </div>
+                        </div>
+                      )}
+
+                      <h3 className={`text-2xl font-bold mb-2 bg-gradient-to-r ${module.color} text-transparent bg-clip-text`}>
+                        {module.name}
+                      </h3>
+
+                      <p className="text-purple-200 text-sm mb-4">{module.subtitle}</p>
+
+                      {unlocked ? (
+                        <button className="btn-primary text-white w-full py-3 rounded-lg font-semibold">
+                          {completed ? '🔄 Refazer' : '▶ Começar'}
+                        </button>
+                      ) : (
+                        <div className="text-yellow-400 text-sm">
+                          🔒 Complete a missão anterior
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {totalCompleted === modules.length && (
+              <div className="mt-12 text-center card-glass rounded-2xl p-8">
+                <div className="text-6xl mb-4">🎉</div>
+                <h2 className="text-3xl font-bold text-white mb-4">
+                  Parabéns, Mestre da Programação!
+                </h2>
+                <p className="text-xl text-purple-200">
+                  Você completou todas as missões e dominou os fundamentos da programação! 🚀
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('app'));
+    root.render(<ModuleMenu />);
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Variáveis - Trilha Da Aprendizagem</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div id="app" class="gradient-bg min-h-screen"></div>
+
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    function VariablesModule() {
+      const [stage, setStage] = useState('intro');
+      const [userAnswers, setUserAnswers] = useState({});
+
+      const variables = [
+        { name: 'idade', value: '15', type: 'number' },
+        { name: 'nome', value: 'Maria', type: 'string' },
+        { name: 'aprovado', value: 'true', type: 'boolean' },
+        { name: 'altura', value: '1.65', type: 'number' }
+      ];
+
+      const checkAnswer = () => {
+        const allCorrect = variables.every(v =>
+          userAnswers[v.name] === v.type
+        );
+
+        if (allCorrect) {
+          setStage('success');
+          const completed = JSON.parse(localStorage.getItem('completed-modules') || '[]');
+          if (!completed.includes('variables')) {
+            completed.push('variables');
+            localStorage.setItem('completed-modules', JSON.stringify(completed));
+          }
+        } else {
+          alert('❌ Algumas respostas estão incorretas. Tente novamente!');
+        }
+      };
+
+      if (stage === 'intro') {
+        return (
+          <div className="min-h-screen p-6 flex items-center justify-center">
+            <div className="max-w-3xl card-glass rounded-3xl p-8">
+              <button
+                onClick={() => window.location.href = 'menu.html'}
+                className="mb-6 text-purple-200 hover:text-white flex items-center gap-2"
+              >
+                ← Voltar ao Mapa
+              </button>
+
+              <div className="text-center mb-8">
+                <div className="text-6xl mb-4">📦</div>
+                <h2 className="text-4xl font-bold text-white mb-4">
+                  Variáveis: O Cofre de Dados
+                </h2>
+              </div>
+
+              <div className="text-purple-100 space-y-4 mb-8">
+                <p className="text-lg">
+                  <strong className="text-cyan-400">O que são variáveis?</strong>
+                </p>
+                <p>
+                  Imagine que você tem várias caixas para guardar coisas diferentes.
+                  Uma caixa para guardar brinquedos, outra para roupas, outra para livros... 🎁
+                </p>
+                <p>
+                  <strong>Variáveis são exatamente isso!</strong> São "caixinhas" onde guardamos informações no computador.
+                </p>
+                <div className="bg-white/10 rounded-lg p-4 space-y-2">
+                  <p><strong className="text-yellow-400">Exemplo:</strong></p>
+                  <p className="code-block">idade = 15</p>
+                  <p className="code-block">nome = "Ana"</p>
+                  <p className="code-block">altura = 1.60</p>
+                </div>
+                <p>
+                  Cada variável tem um <strong className="text-cyan-400">nome</strong> (como 'idade')
+                  e um <strong className="text-pink-400">valor</strong> (como 15).
+                </p>
+                <p>
+                  <strong className="text-yellow-400">Tipos de dados:</strong>
+                </p>
+                <div className="bg-white/10 rounded-lg p-4 space-y-2 ml-4">
+                  <p>🔢 <strong>number</strong> (números): 10, 3.14, 100</p>
+                  <p>📝 <strong>string</strong> (texto): "João", "Brasil"</p>
+                  <p>✅ <strong>boolean</strong> (verdadeiro/falso): true, false</p>
+                </div>
+                <p>
+                  <strong className="text-yellow-400">🎯 Sua Missão:</strong> Identifique o tipo de cada variável!
+                </p>
+              </div>
+
+              <button
+                onClick={() => setStage('challenge')}
+                className="btn-primary text-white w-full py-4 text-lg rounded-xl font-bold"
+              >
+                Aceitar Desafio 🚀
+              </button>
+            </div>
+          </div>
+        );
+      }
+
+      if (stage === 'challenge') {
+        return (
+          <div className="min-h-screen p-6">
+            <div className="max-w-4xl mx-auto">
+              <button
+                onClick={() => window.location.href = 'menu.html'}
+                className="mb-6 text-purple-200 hover:text-white flex items-center gap-2"
+              >
+                ← Voltar ao Mapa
+              </button>
+
+              <div className="text-center mb-8">
+                <div className="text-5xl mb-3">🔍</div>
+                <h2 className="text-3xl font-bold text-white mb-2">
+                  Identifique os Tipos de Dados
+                </h2>
+                <p className="text-purple-200">
+                  Selecione o tipo correto para cada variável
+                </p>
+              </div>
+
+              <div className="card-glass rounded-2xl p-8 mb-8">
+                <div className="space-y-6">
+                  {variables.map((variable, index) => (
+                    <div key={index} className="bg-white/10 rounded-xl p-6">
+                      <div className="mb-4">
+                        <p className="text-purple-200 mb-2">Variável:</p>
+                        <div className="code-block text-xl">
+                          {variable.name} = {variable.value}
+                        </div>
+                      </div>
+
+                      <p className="text-purple-200 mb-3">Qual é o tipo?</p>
+                      <div className="grid grid-cols-3 gap-3">
+                        {['number', 'string', 'boolean'].map(type => (
+                          <button
+                            key={type}
+                            onClick={() => setUserAnswers({ ...userAnswers, [variable.name]: type })}
+                            className={`py-3 px-4 rounded-lg font-semibold transition-all ${userAnswers[variable.name] === type
+                                ? 'bg-gradient-to-r from-cyan-500 to-purple-600 text-white'
+                                : 'bg-white/20 text-purple-100 hover:bg-white/30'
+                              }`}
+                          >
+                            {type === 'number' && '🔢'} {type === 'string' && '📝'} {type === 'boolean' && '✅'}
+                            <br />
+                            {type}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="text-center">
+                <button
+                  onClick={checkAnswer}
+                  disabled={Object.keys(userAnswers).length !== variables.length}
+                  className="btn-primary text-white px-12 py-4 rounded-xl font-semibold text-lg"
+                >
+                  ✅ Verificar Respostas
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      if (stage === 'success') {
+        return (
+          <div className="min-h-screen p-6 flex items-center justify-center">
+            <div className="max-w-2xl card-glass rounded-3xl p-8 text-center">
+              <div className="text-8xl mb-6 animate-bounce">🎉</div>
+              <h2 className="text-4xl font-bold text-white mb-4">
+                Missão Concluída!
+              </h2>
+              <p className="text-xl text-purple-200 mb-8">
+                Excelente! Você entendeu como funcionam as variáveis e os diferentes tipos de dados! 📦
+              </p>
+
+              <div className="bg-white/10 rounded-lg p-6 mb-8 text-left">
+                <h3 className="text-2xl font-bold text-cyan-400 mb-4 text-center">
+                  📚 O que você aprendeu:
+                </h3>
+                <ul className="text-purple-100 space-y-3 text-lg">
+                  <li className="flex items-start gap-3">
+                    <span className="text-green-400 text-2xl">✓</span>
+                    <span>Variáveis guardam informações (como caixinhas)</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-green-400 text-2xl">✓</span>
+                    <span>Existem diferentes tipos de dados: números, textos e booleanos</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-green-400 text-2xl">✓</span>
+                    <span>Cada variável tem um nome e um valor</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-green-400 text-2xl">✓</span>
+                    <span>Usar o tipo correto é importante!</span>
+                  </li>
+                </ul>
+              </div>
+
+              <button
+                onClick={() => window.location.href = 'menu.html'}
+                className="btn-primary text-white text-lg px-8 py-4 rounded-xl font-bold"
+              >
+                Voltar ao Mapa 🗺️
+              </button>
+            </div>
+          </div>
+        );
+      }
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('app'));
+    root.render(<VariablesModule />);
+  </script>
+</body>
+
+</html>
