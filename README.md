@@ -25,10 +25,10 @@ OPÇÃO 1: Como Subpasta (RECOMENDADO)
 1. Entre no painel da Hostinger
 2. Abra o File Manager (Gerenciador de Arquivos)
 3. Navegue até: public_html/
-4. Crie uma nova pasta chamada: missao-codigo
-5. Entre na pasta missao-codigo/
+4. Crie uma nova pasta chamada: Jogar Trilha Da Apredizagem
+5. Entre na pasta Trilha-Da-Apredizagem/
 6. Faça upload de TODOS os 9 arquivos listados acima
-7. Acesse: https://seusite.com/missao-codigo/
+7. Acesse: https://seusite.com/Trilha-Da-Apredizagem/
 
 ✅ Pronto! O jogo estará funcionando!
 
@@ -48,15 +48,15 @@ OPÇÃO 2: Como Página Principal
 
 No seu site HTML, adicione:
 
-<a href="/missao-codigo/">🚀 Jogar Missão Código</a>
+<a href="/(https://jogoeducativo.resetprint.com.br/)/">🚀 Jogar Trilha Da Apredizagem </a>
 
 Ou como botão:
 
-<a href="/missao-codigo/" 
+<a href="/(https://jogoeducativo.resetprint.com.br/)/" 
    style="background: linear-gradient(135deg, #06b6d4 0%, #9333ea 100%);
           color: white; padding: 15px 30px; border-radius: 10px;
           text-decoration: none; display: inline-block;">
-   🚀 Jogar Missão Código
+   🚀 Jogar Jogar Trilha Da Apredizagem
 </a>
 
 ═══════════════════════════════════════════════════════════════
@@ -139,7 +139,7 @@ Antes de fazer upload:
 ═══════════════════════════════════════════════════════════════
 
 public_html/
-└── missao-codigo/
+└── Trilha-Da-Apredizagem/
     ├── index.html         ← Página inicial
     ├── menu.html          ← Menu principal
     ├── algoritmos.html    ← Módulo 1
